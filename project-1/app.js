@@ -1,7 +1,7 @@
 /** @format */
 
 // Globals
-let toastMessageContainer = null;
+let toastContainer = null;
 const defaultColor = {
   red: 221,
   green: 222,
@@ -55,7 +55,6 @@ window.onload = () => {
 
 // main or boot function, this function will take care of getting all the DOM references
 function main() {
-  // Dom References
   const generateRandomColorBtn = document.getElementById(
     "generate-random-color"
   );
@@ -74,7 +73,8 @@ function main() {
   bgFileDeleteBtn.style.display = "none";
   const bgController = document.getElementById("bg-controller");
   bgController.style.display = "none";
-  // event listeners
+
+  //   Event listeners
   generateRandomColorBtn.addEventListener(
     "click",
     handleGenerateRandomColorBtn
@@ -126,14 +126,17 @@ function main() {
     .addEventListener("change", changeBackgroundPreferences);
 }
 
-// event handlers
+//event handlers
+
 function handleGenerateRandomColorBtn() {
   const color = generateColorDecimal();
   updateColorCodeToDom(color);
 }
+
 function handleColorModeHexInput(e) {
   const hexColor = e.target.value;
   if (hexColor) {
+    this.value = hexColor.toUpperCase();
     if (isValidHex(hexColor)) {
       const color = hexToDecimalColor(hexColor);
       updateColorCodeToDom(color);
@@ -150,47 +153,60 @@ function handleColorSlider(colorSliderRed, colorSliderGreen, colorSliderBlue) {
     updateColorCodeToDom(color);
   };
 }
+
 function handleCopyToClipboard() {
   const colorModeRadios = document.getElementsByName("color-mode");
-
   const mode = getCheckedValueFromRadios(colorModeRadios);
-  if (toastMessageContainer !== null) {
-    removeToastMessage();
+  if (mode === null) {
+    throw new Error("Invalid Radio Input");
   }
-  if (mode == null) {
-    throw new Error("Invalid color mode radio input");
-  } else if (mode == "hex") {
-    const hexValue = document.getElementById("input-hex").value;
-    if (hexValue && isValidHex(hexValue)) {
-      navigator.clipboard.writeText(`#${hexValue}`);
-      generateToastMessage(`#${hexValue} Copied`);
+
+  if (toastContainer !== null) {
+    toastContainer.remove();
+    toastContainer = null;
+  }
+
+  if (mode === "hex") {
+    const hexColor = document.getElementById("input-hex").value;
+    if (hexColor && isValidHex(hexColor)) {
+      navigator.clipboard.writeText(`#${hexColor}`);
+      copySound.volume = 0.2;
+      copySound.play();
+      generateToastMessage(`#${hexColor} Copied`);
     } else {
-      alert("Invalid Hex Code!, Unable to copy");
+      alert("Invalid Hex Color Code");
     }
-  } else if (mode == "rgb") {
-    const rgbValue = document.getElementById("input-rgb").value;
-    if (rgbValue) {
-      navigator.clipboard.writeText(`${rgbValue}`);
-      generateToastMessage(`${rgbValue} Copied`);
+  } else {
+    const rgbColor = document.getElementById("input-rgb").value;
+    if (rgbColor) {
+      navigator.clipboard.writeText(rgbColor);
+      copySound.volume = 0.2;
+      copySound.play();
+      generateToastMessage(`${rgbColor} Copied`);
     } else {
-      alert("Invalid Hex Code!, Unable to copy");
+      alert("invalid RGB Color");
     }
   }
 }
+
 function handlePresetColorsParent(event) {
   const child = event.target;
+  const hex = child.getAttribute("data-color").slice(1);
+  const color = hexToDecimalColor(hex);
   if (child.className === "color-box") {
-    navigator.clipboard.writeText(child.getAttribute("data-color"));
-    generateToastMessage(
-      `${child.getAttribute("data-color")} copied to clipboard`
-    );
-    copySound.volume = 0.3;
+    copySound.volume = 0.2;
     copySound.play();
+    updateColorCodeToDom(color);
   }
 }
+
 function handleSaveToCustomBtn(customColorsParent, colorModeHexInp) {
   return function () {
     const color = `#${colorModeHexInp.value}`;
+    if (!customColors.includes(color)) {
+      generateToastMessage(`Saved to Custom Preset Colors!`);
+      copySound.play();
+    }
     if (customColors.includes(color)) {
       alert("The color has been  already Saved");
       return;
@@ -233,30 +249,30 @@ function handleBgFileDeleteBtn(
 }
 // DOM functions
 /**
- * Remove already generated toast message
- */
-function removeToastMessage() {
-  toastMessageContainer.classList.remove("toast-message-slide-in");
-  toastMessageContainer.classList.add("toast-message-slide-out");
-
-  toastMessageContainer.addEventListener("animationend", function () {
-    toastMessageContainer.remove();
-    toastMessageContainer = null;
-  });
-}
 /**
- * Generate and display a Toast Message
+ * Generate, display and remove a Toast Message
  * @param {string} msg
  */
 function generateToastMessage(msg) {
-  toastMessageContainer = document.createElement("div");
-  toastMessageContainer.innerText = msg;
-  toastMessageContainer.className = "toast-message toast-message-slide-in";
+  toastContainer = document.createElement("div");
+  toastContainer.innerText = msg;
+  toastContainer.className = "toast-message toast-message-slide-in";
+  document.body.appendChild(toastContainer);
 
-  toastMessageContainer.addEventListener("click", removeToastMessage);
-  document.body.appendChild(toastMessageContainer);
-  setTimeout(() => {
-    removeToastMessage();
+  toastContainer.addEventListener("click", function () {
+    toastContainer.classList.remove("toast-message-slide-in");
+    toastContainer.classList.add("toast-message-slide-out");
+
+    toastContainer.addEventListener("animationend", function () {
+      toastContainer.remove();
+      toastContainer = null;
+    });
+  });
+  setTimeout(function () {
+    toastContainer.classList.remove("toast-message-slide-in");
+    toastContainer.classList.add("toast-message-slide-out");
+    toastContainer.remove();
+    toastContainer = null;
   }, 2000);
 }
 /**
