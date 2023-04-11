@@ -73,7 +73,6 @@ function main() {
   bgFileDeleteBtn.style.display = "none";
   const bgController = document.getElementById("bg-controller");
   bgController.style.display = "none";
-
   //   Event listeners
   generateRandomColorBtn.addEventListener(
     "click",
