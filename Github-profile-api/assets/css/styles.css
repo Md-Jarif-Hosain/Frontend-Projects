@@ -6,7 +6,10 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
-* {
+*,
+form,
+*::before,
+*::after {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -19,26 +22,25 @@ body {
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
-  overflow: hidden;
 }
-.container{
+.container {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   flex-wrap: wrap;
 }
 form {
-  margin: 30px;
+  margin: 20px 0;
 }
 .input-group {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 30vh;
+  height: 150px;
   transition: all 0.3s ease;
 }
 .input-field {
@@ -97,62 +99,116 @@ form {
     0 15px 40px rgba(166, 173, 201, 0.2);
   display: flex;
   align-items: center;
+  flex-direction: column;
   padding: 3rem;
+  width: 700px;
 }
-
+.card .img-container {
+  width: 100%;
+  clear: both;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .avatar {
+  position: relative;
   border: 10px solid #2a2a72;
   border-radius: 50%;
   height: 150px;
   width: 150px;
 }
-.user-info{
-  width: 50%;
-  margin-left: 5rem;
-  color: white;
+.user-info {
+  width: 100%;
+  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.877);
 }
-.user-info h2{
+.user-info h2 {
+  text-align: center;
   font-size: 1.3rem;
   margin: 5px;
+  font-weight: 700;
 }
-.user-info p{
-  font-size: 1rem;
-  color: #555555;
-  margin: 5px;
-
+.user-info p {
+  text-align: center;
 }
-.user-info ul{
+.user-info .bio {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #777;
+  margin: 15px 0;
+}
+.user-info ul {
   list-style: none;
   font-size: 14px;
-  margin: 5px;
-
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 15px 0;
 }
-@media screen and (max-width: 425px){
-  .container{
+.user-info ul li {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+.user-info ul li strong {
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+.repos {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.repos a {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  padding: 8px;
+  margin: 5px;
+  min-width: 70px;
+  word-wrap: break-word;
+  border-radius: 15px;
+  font-size: 10px;
+  font-weight: 500;
+  background-color: #3b2066;
+  border: 1px solid #634594;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.repos a:hover {
+  background-color: rgb(83, 50, 136);
+}
+@media screen and (max-width: 425px) {
+  .container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
   }
-  .card{
+  .card {
     padding: 2rem;
     width: 95vw;
     margin: 0 auto;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
   }
-  .user-info{
+  .user-info {
     width: 100%;
     text-align: center;
     margin: 20px 0;
   }
-  .user-info ul{
-    list-style: none;
+  .user-info ul {
     text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .user-info h2{
+  .user-info h2 {
     font-size: 16px;
   }
 }
